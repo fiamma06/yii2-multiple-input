@@ -75,10 +75,9 @@
 
             $wrapper.data('multipleInput', {
                 settings: settings,
-                currentIndex: 0,
+                currentIndex: getCurrentIndex($wrapper),
                 attributeDefaults: {}
             });
-
 
             $wrapper.on('click.multipleInput', '.js-input-remove', function (e) {
                 e.stopPropagation();
@@ -115,7 +114,7 @@
                     $wrapper.find('.multiple-input-list').find('input, select, textarea').each(function () {
                         addAttribute($(this));
                     });
-                    $wrapper.data('multipleInput').currentIndex = $wrapper.find('.multiple-input-list__item').length;
+
                     clearInterval(intervalID);
 
                     var event = $.Event(events.afterInit);
@@ -255,6 +254,10 @@
             return;
         }
 
+        if(form.length == 0) {
+            return;
+        }
+
         // check that input has been already added to the activeForm
         if (typeof form.yiiActiveForm('find', id) !== 'undefined') {
             return;
@@ -294,6 +297,32 @@
         }
 
         return id;
+    };
+
+    /**
+     * Find all integer indexes and select max integer number
+     *
+     * @param $wrapper
+     * @returns {*}
+     */
+    var getCurrentIndex = function($wrapper) {
+
+        var indexes = [];
+        var $target = $wrapper.find('.multiple-input-list__item');
+
+        $target.each(function(key, el) {
+            var index = $(el).data('index');
+
+            if( /^[\d]+$/.test(index) ) {
+                indexes.push(index);
+            }
+        });
+
+        if(indexes.lenght == 0) {
+            return $target.length;
+        } else {
+            return Math.max.apply(null, indexes) + 1;
+        }
     };
 
     String.prototype.replaceAll = function (search, replace) {

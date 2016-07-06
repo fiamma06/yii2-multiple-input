@@ -194,7 +194,9 @@ class TableRenderer extends BaseRenderer
         }
 
         Html::addCssClass($options, 'multiple-input-list__item');
-        
+
+        $options['data']['index'] = '{multiple_index}';
+
         return $options;
     }
 
